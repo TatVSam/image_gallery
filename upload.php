@@ -34,12 +34,25 @@ if (!empty($_FILES)) {
         }
 }
 
-print_r($errors);
 
-if (isset($_FILES['fileToUpload']) && (count($errors) == 0)) {
+
+if (empty($_FILES['fileToUpload']["name"])) {
+    $_SESSION["upload_info"] = "<br>" . "Вы не выбрали файл!";
+    header("Location: index.php");
+
+} elseif (count($errors) <>0) {
+    $str = "<br>" . "При загрузке изображений произошли следующие ошибки:" . "<br>";
+    foreach ($errors as $error) {
+        $str .= $error . "<br>";
+    }
+    $_SESSION["upload_info"] = $str;
+    header("Location: index.php");
+} elseif (isset($_FILES['fileToUpload']) && (count($errors) == 0)) {
     $link=mysqli_connect("localhost", "root", "root", "image_gallery"); 
     $uploader_id = $_SESSION['user_id'];
     mysqli_query($link, "INSERT INTO images SET uploader_id='$uploader_id', name='".$savePath."'");
+    $_SESSION["upload_info"] = "<br>" . "Файл успешно загружен!";
+    header("Location: index.php");
 }
 
 /*
