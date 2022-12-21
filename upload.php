@@ -51,7 +51,7 @@ if (empty($_FILES['fileToUpload']["name"])) {
     $link=mysqli_connect("localhost", "root", "root", "image_gallery"); 
     $uploader_id = $_SESSION['user_id'];
     mysqli_query($link, "INSERT INTO images SET uploader_id='$uploader_id', name='".$savePath."'");
-    $_SESSION["upload_info"] = "<br>" . "Файл успешно загружен!";
+    $_SESSION["upload_info_success"] = "<br>" . "Файл успешно загружен!";
     header("Location: index.php");
 }
 

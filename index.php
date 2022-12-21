@@ -22,6 +22,7 @@ if (!empty($_COOKIE['id'])) {
 
 if (!empty($_POST["deleted_id"])) {
     mysqli_query($link,"DELETE FROM images WHERE image_id ='".mysqli_real_escape_string($link, $_POST["deleted_id"])."'");
+    mysqli_query($link,"DELETE FROM comments WHERE image_id ='".mysqli_real_escape_string($link, $_POST["deleted_id"])."'");
     unset($_POST["deleted_id"]);
     header ("Refresh: 2");
 }
@@ -68,33 +69,51 @@ if (!empty($_SESSION['auth'])) {
         <a href="logout.php"><button class="open-button btn btn-secondary" type="button">Выйти</button></a>         
 </div>
 
-<?php
 
 
 
+<div class="container form-container rounded p-4 m-4">
 
-  print "Добро пожаловать, ".$_SESSION['user_login'].". Вы можете загрузить новое изображение в нашу галерею!";
-  if (!empty ($_SESSION["upload_info"])) {
-    echo $_SESSION["upload_info"];
-    unset ($_SESSION["upload_info"]);
-  
-  }
 
-  
-  ?>
+<h4>Добро пожаловать, <?= $_SESSION['user_login'] ?>! Вы можете загрузить новое изображение в нашу галерею!</h1>
+ 
+ 
   <form action="upload.php" method="post" enctype="multipart/form-data">
-    Выберите изображение для загрузки:
+    <p>Выберите изображение для загрузки:<p>
+
     <input type="hidden" name="MAX_FILE_SIZE" value="UPLOAD_MAX_SIZE">
-    <input type="file" name="fileToUpload" id="fileToUpload">
+    <input type="file" class="file-input" name="fileToUpload" id="chooseFile">
     <small class="form-text text-muted">
-                  Максимальный размер файла: <?php echo UPLOAD_MAX_SIZE / 1000000; ?>Мб.
-                  Допустимые форматы: <?php echo implode(', ', ALLOWED_TYPES) ?>.
-              </small>
-    <input type="submit" value="Загрузить изображение" name="submit">
+          Максимальный размер файла: <?php echo UPLOAD_MAX_SIZE / 1000000; ?> Мб.
+          Допустимые форматы: <?php echo implode(', ', ALLOWED_TYPES) ?>.
+    </small>
+   
+<hr>
+    <!--<input type="submit" value="Загрузить изображение" name="submit">-->
+    <button type="submit" class="btn btn-primary">Загрузить</button>
+    <a href="index.php" class="btn btn-secondary ml-3">Сброс</a>
   </form>
+
+   
+
   <?php
   }
+
+  if (!empty ($_SESSION["upload_info"])) { ?>
+    <div class="alert alert-danger"><?= $_SESSION["upload_info"]; ?></div>
+    
+   <?php unset ($_SESSION["upload_info"]);
+  
+  }
+
+  if (!empty ($_SESSION["upload_info_success"])) { ?>
+    <div class="alert alert-success"><?= $_SESSION["upload_info_success"]; ?></div>
+    
+   <?php unset ($_SESSION["upload_info_success"]);
+  
+  }
 ?>
+</div>
 
 <?php
         if (empty($_SESSION['auth'])) {
@@ -121,24 +140,33 @@ if (!empty($_SESSION['auth'])) {
 <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="registerModalLabel">Modal title</h5>
+      
+    <div class="modal-header">
+        <h5 class="modal-title" id="registerModalLabel">Зарегистрируйтесь</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+
       <div class="modal-body">
-      <form action="register.php" method="POST">
-Логин <input name="login" type="text" placeholder="Логин" required><br>
-Пароль <input name="password" type="password" placeholder="Пароль" required><br>
-Пароль <input name="password_repeat" type="password" placeholder="Повторите пароль" required><br>
-<input name="submit" type="submit" value="Зарегистрироваться">
-</form>
+        <form action="register.php" method="POST">
+          <div class="form-group">
+            <input name="login" class="form-control" type="text" placeholder="Логин" required>
+          </div>
+          <div class="form-group">
+            <input name="password" class="form-control" type="password" placeholder="Пароль" required>
+          </div>
+          <div class="form-group">     
+            <input name="password_repeat" class="form-control" type="password" placeholder="Повторите пароль" required>
+          </div>      
       </div>
+      
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <input name="submit" class ="btn btn-primary" type="submit" value="Зарегистрироваться">
+        <button type="button" class="btn cancel btn-secondary" data-dismiss="modal">Закрыть</button>
+      </form>       
       </div>
+
     </div>
   </div>
 </div>
@@ -152,25 +180,37 @@ if (!empty($_SESSION['auth'])) {
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="loginModalLabel">Modal title</h5>
+      
+    <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Авторизуйтесь</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-   
-      <form action="login.php" method="POST">
-Логин <input name="login" type="text" required><br>
-Пароль <input name="password" type="password" required><br>
-Не прикреплять к IP(не безопасно) <input type="checkbox" name="not_attach_ip"><br>
-<input name="submit" type="submit" value="Войти">
-</form>
+      <div class="modal-body"> 
+        <form action="login.php" method="POST">
+          <div class="form-group">
+            <label for="login"><b>Логин</b></label>
+            <input name="login" class="form-control" type="text" placeholder="Введите логин" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password"><b>Пароль</b></label>
+            <input name="password" class="form-control" type="password" placeholder="Введите пароль" required>
+          </div>
+
+          <div class="form-group">
+            <label for="not_attach_ip"><b>Не прикреплять к IP(не безопасно)</b></label>
+            <input type="checkbox" class="form-control" name="not_attach_ip"><br>
+        </div>
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <input name="submit" type="submit" class="btn btn-primary" value="Войти">
+        <button type="button" class="btn cancel btn-secondary" data-dismiss="modal">Закрыть</button>
+      </form>
       </div>
+
     </div>
   </div>
 </div>
@@ -185,9 +225,11 @@ for ($images = []; $row = mysqli_fetch_assoc($result); $images[] = $row);
 //$res = mysqli_fetch_assoc($result);
 //echo $res['user_login'];
 
-
 foreach ($images as $image) {
 ?>
+<div class="container">
+    <div class="row">
+    <div class="col-6">
     <img src="<?= $image["name"] ?>" >
    
     <?php 
@@ -195,7 +237,7 @@ foreach ($images as $image) {
     $result = mysqli_query($link,"SELECT user_login FROM users WHERE user_id ='".mysqli_real_escape_string($link, $image['uploader_id'])."'");
     
     $res = mysqli_fetch_assoc($result);
-    echo $res['user_login'] . " ";
+    echo "<br>" . $res['user_login'] . " ";
 
     if (!empty($_SESSION["user_id"]) and ($_SESSION["user_id"] == $image["uploader_id"])) {
 ?>
@@ -204,9 +246,14 @@ foreach ($images as $image) {
    <input type="hidden" name="deleted_id" value="<?= $image['image_id'] ?>">
    <p><input type="submit" value="Удалить"></p>
   </form>
+    
+    
   <?php
-    }
-    echo "<p>Комменты</p>";
+    } ?>
+    </div>
+    <div class="col-6">
+    <p>Комменты</p>
+    <?php
     $result = mysqli_query($link,"SELECT comment_id, author_id, text, date FROM comments WHERE image_id='".mysqli_real_escape_string($link, $image['image_id'])."'");
     for ($comments = []; $row = mysqli_fetch_assoc($result); $comments[] = $row);
     //echo "<pre>"; var_dump($comments); echo "</pre>";
@@ -239,11 +286,13 @@ foreach ($images as $image) {
 
     <button type="submit">Опубликовать</button>
 </form>
+</div> <!-- col -->
+</div> <!-- row -->
+</div> <!-- container -->
 <?php
 }
 
 ?>
-
 
     
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

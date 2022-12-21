@@ -23,9 +23,27 @@ img {
     
 }
 
+.form-login {
+    display: block;
+    position: absolute;
+    padding: 20px 20px;
+    top: 20%;
+    right: 40%;
+    border: 5px solid #4b1f01;
+    border-radius: 20px;
+    background-color: white;
+    z-index: 9;   
+}
+
+
 .registration-button {
     position: absolute;
     top: 1%;
     right: 120px;     
     
+}
+
+.form-container {
+    min-height: 250px;
+    background-color: rgb(236, 234, 234);
 }

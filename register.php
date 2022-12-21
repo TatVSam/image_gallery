@@ -38,19 +38,67 @@ if(isset($_POST['submit']))
         mysqli_query($link,"INSERT INTO users SET user_login='".$login."', user_password='".$password."'");
         header("Location: login.php"); exit();
     }
-    else
+   /* else
     {
         print "<b>При регистрации произошли следующие ошибки:</b><br>";
         foreach($err AS $error)
         {
             print $error."<br>";
         }
-    }
+    }*/
 }
 ?> 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css"> 
+    
+</head>
+<body>
+<div class="form-login">
 <form method="POST">
-Логин <input name="login" type="text" placeholder="Логин" required><br>
-Пароль <input name="password" type="password" placeholder="Пароль" required><br>
-Пароль <input name="password_repeat" type="password" placeholder="Повторите пароль" required><br>
-<input name="submit" type="submit" value="Зарегистрироваться">
-</form>
+    <div class="form-group">
+        <input name="login" class="form-control" type="text" placeholder="Логин" required>
+    </div>
+    <div class="form-group">
+        <input name="password" class="form-control" type="password" placeholder="Пароль" required>
+    </div>
+    <div class="form-group">     
+        <input name="password_repeat" class="form-control" type="password" placeholder="Повторите пароль" required>
+    </div>      
+    
+    <hr>
+      
+        <input name="submit" class ="btn btn-primary" type="submit" value="Зарегистрироваться">
+        <a href="index.php" class="btn btn-secondary ml-3">В галерею</a>
+        <?php
+
+        if (count($err) <> 0) { ?>
+        <p>При регистрации произошли следующие ошибки:</p><br>
+        <?php    
+        foreach($err AS $error)
+            {
+        ?>
+    <small class="form-text text-muted">
+          <?= $error ?>
+    </small>
+        <?php    } 
+        }
+        ?>
+      </form> 
+         
+    </div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+   
+
+</body>
+</html>
