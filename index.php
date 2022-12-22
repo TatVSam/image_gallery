@@ -1,5 +1,6 @@
 <?php 
 include 'config.php';
+include 'functions.php';
 session_start();
 $link=mysqli_connect("localhost", "root", "root", "image_gallery"); 
 if (!empty($_COOKIE['id'])) {
@@ -17,9 +18,6 @@ if (!empty($_COOKIE['id'])) {
 
 
 
-
-
-
 if (!empty($_POST["deleted_id"])) {
     mysqli_query($link,"DELETE FROM images WHERE image_id ='".mysqli_real_escape_string($link, $_POST["deleted_id"])."'");
     mysqli_query($link,"DELETE FROM comments WHERE image_id ='".mysqli_real_escape_string($link, $_POST["deleted_id"])."'");
@@ -29,11 +27,12 @@ if (!empty($_POST["deleted_id"])) {
 
 echo $_POST["comment_image_id"];
 if (!empty($_POST["comment_image_id"])) {
-    $comment_date = date("F j, Y, g:i a");
+    $comment_date = date("j F Y, G:i");
+    $comment_date_rus = getRussianDate($comment_date);
     mysqli_query($link,"INSERT INTO comments SET author_id='".mysqli_real_escape_string($link, $_SESSION["user_id"])."', 
     image_id='".mysqli_real_escape_string($link, $_POST["comment_image_id"])."', 
     text='".mysqli_real_escape_string($link, $_POST["comment"])."', 
-    date='$comment_date'"); 
+    date='$comment_date_rus'"); 
     unset($_POST["comment_image_id"]);
     //echo $_POST["comment_image_id"];
     header ("Refresh: 2");
@@ -229,7 +228,7 @@ foreach ($images as $image) {
 ?>
 <div class="container">
     <div class="row">
-    <div class="col-6">
+    <div class="col-sm">
     <img src="<?= $image["name"] ?>" >
    
     <?php 
@@ -244,14 +243,15 @@ foreach ($images as $image) {
 
    <form action="" method="post">
    <input type="hidden" name="deleted_id" value="<?= $image['image_id'] ?>">
-   <p><input type="submit" value="Удалить"></p>
+   <button class="btn btn-link" type="submit">Удалить изображение</button>
+   <!--<p><input type="submit" value="Удалить"></p> -->
   </form>
     
     
   <?php
     } ?>
     </div>
-    <div class="col-6">
+    <div class="col-sm">
     <p>Комменты</p>
     <?php
     $result = mysqli_query($link,"SELECT comment_id, author_id, text, date FROM comments WHERE image_id='".mysqli_real_escape_string($link, $image['image_id'])."'");
@@ -269,7 +269,8 @@ foreach ($images as $image) {
             
                <form action="" method="post">
                <input type="hidden" name="comment_deleted_id" value="<?= $comment['comment_id'] ?>">
-               <p><input type="submit" value="Удалить"></p>
+               <button class="btn btn-link" type="submit">Удалить комментарий</button>
+               <!-- <p><input type="submit" value="Удалить"></p> -->
               </form>
               <?php
                 }
@@ -282,9 +283,14 @@ foreach ($images as $image) {
 
     <form action="" method="post">
     <input type="hidden" name="comment_image_id" value="<?= $image['image_id'] ?>">
-    <textarea placeholder="Что думаете?" name="comment" id="comment"></textarea>
-
-    <button type="submit">Опубликовать</button>
+    
+    <div class="form-group purple-border">
+  
+  <textarea class="form-control" placeholder="Что думаете об этом изображении?" name="comment" id="comment" rows="3"></textarea>
+</div>
+   <!-- <textarea placeholder="Что думаете?" name="comment" id="comment"></textarea> -->
+   <button type="submit" class="btn btn-outline-secondary">Опубликовать комментарий</button>
+   <!-- <button type="submit">Опубликовать</button> -->
 </form>
 </div> <!-- col -->
 </div> <!-- row -->
