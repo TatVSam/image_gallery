@@ -1,7 +1,8 @@
 <?
 // Страница регистрации нового пользователя 
 // Соединяемся с БД
-$link=mysqli_connect("localhost", "root", "root", "image_gallery"); 
+include 'config.php';
+$link=mysqli_connect(HOST_NAME, "root", "root", DB_NAME); 
 if(isset($_POST['submit']))
 {
     $err = [];

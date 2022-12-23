@@ -2,7 +2,7 @@
 include 'config.php';
 include 'functions.php';
 session_start();
-$link=mysqli_connect("localhost", "root", "root", "image_gallery"); 
+$link=mysqli_connect(HOST_NAME, "root", "root", DB_NAME); 
 if (!empty($_COOKIE['id'])) {
     $query = mysqli_query($link,"SELECT user_id, user_hash, user_login FROM users WHERE user_id='".mysqli_real_escape_string($link,$_COOKIE['id'])."' LIMIT 1");
     $userdata = mysqli_fetch_assoc($query);
@@ -19,6 +19,10 @@ if (!empty($_COOKIE['id'])) {
 
 
 if (!empty($_POST["deleted_id"])) {
+    //удаляем файл с диска
+    $delete_image = mysqli_query($link,"SELECT name FROM images WHERE image_id ='".mysqli_real_escape_string($link, $_POST["deleted_id"])."'");
+    $deleted_image_path = mysqli_fetch_assoc($delete_image);
+    unlink($deleted_image_path['name']);
     mysqli_query($link,"DELETE FROM images WHERE image_id ='".mysqli_real_escape_string($link, $_POST["deleted_id"])."'");
     mysqli_query($link,"DELETE FROM comments WHERE image_id ='".mysqli_real_escape_string($link, $_POST["deleted_id"])."'");
     unset($_POST["deleted_id"]);
@@ -39,7 +43,7 @@ if (!empty($_POST["comment_image_id"])) {
 }
 echo $_POST["comment_deleted_id"];
 if (!empty($_POST["comment_deleted_id"])) {
-    echo $_POST["comment_deleted_id"];
+    //echo $_POST["comment_deleted_id"];
     mysqli_query($link,"DELETE FROM comments WHERE comment_id ='".mysqli_real_escape_string($link, $_POST["comment_deleted_id"])."'");
     unset($_POST["comment_deleted_id"]);
     header ("Refresh: 2");
@@ -71,7 +75,8 @@ if (!empty($_SESSION['auth'])) {
 
 
 
-<div class="container form-container rounded p-4 m-4">
+<div class="container form-container rounded p-4 m-12 mt-2">
+
 
 
 <h4>Добро пожаловать, <?= $_SESSION['user_login'] ?>! Вы можете загрузить новое изображение в нашу галерею!</h1>
@@ -228,16 +233,17 @@ foreach ($images as $image) {
 ?>
 <div class="container">
     <div class="row">
-    <div class="col-sm">
+    <div class="col-sm mt-4">
     <img src="<?= $image["name"] ?>" >
    
     <?php 
     
     $result = mysqli_query($link,"SELECT user_login FROM users WHERE user_id ='".mysqli_real_escape_string($link, $image['uploader_id'])."'");
     
-    $res = mysqli_fetch_assoc($result);
-    echo "<br>" . $res['user_login'] . " ";
-
+    $image_uploader = mysqli_fetch_assoc($result);
+    ?>
+    <div class="text-info mt-1">Загрузил(а) <?= $image_uploader['user_login'] ?></div>
+    <?php
     if (!empty($_SESSION["user_id"]) and ($_SESSION["user_id"] == $image["uploader_id"])) {
 ?>
 
@@ -246,13 +252,14 @@ foreach ($images as $image) {
    <button class="btn btn-link" type="submit">Удалить изображение</button>
    <!--<p><input type="submit" value="Удалить"></p> -->
   </form>
-    
+   
     
   <?php
     } ?>
+  
     </div>
-    <div class="col-sm">
-    <p>Комменты</p>
+    <div class="col-sm mt-4">
+    <p class="text-center text-uppercase font-weight-bold text-secondary">Комментарии</p>
     <?php
     $result = mysqli_query($link,"SELECT comment_id, author_id, text, date FROM comments WHERE image_id='".mysqli_real_escape_string($link, $image['image_id'])."'");
     for ($comments = []; $row = mysqli_fetch_assoc($result); $comments[] = $row);
@@ -260,10 +267,12 @@ foreach ($images as $image) {
     foreach ($comments as $comment) {
         $author_name_query = mysqli_query($link,"SELECT user_login FROM users WHERE user_id='".mysqli_real_escape_string($link, $comment['author_id'])."' LIMIT 1");
         $author_name = mysqli_fetch_assoc($author_name_query);
-        echo $author_name['user_login'] . nl2br("\n");
-        echo $comment['text'];
-        echo "<p>". $comment['date'] . "</p>";
-
+    ?>
+        <div class="container comment_container mt-2">
+        <p class="text-right text-info"><?= $author_name['user_login'] ?></p>
+        <p><?= $comment['text'] ?></p>
+        <p class="text-right text-muted"><?= $comment['date'] ?></p>
+<?php
         if (!empty($_SESSION["user_id"]) and ($_SESSION["user_id"] == $comment["author_id"])) {
             ?>
             
@@ -274,24 +283,27 @@ foreach ($images as $image) {
               </form>
               <?php
                 }
+        echo " </div>";
     }
-    /*
-    for ($author_name = []; $row = mysqli_fetch_assoc($result); $author_name[] = $row);
-    
-    echo "<pre>"; var_dump($author_name); echo "</pre>";*/
+ 
+    if (!empty($_SESSION['auth'])) {
  ?>
-
+ 
     <form action="" method="post">
     <input type="hidden" name="comment_image_id" value="<?= $image['image_id'] ?>">
     
     <div class="form-group purple-border">
   
-  <textarea class="form-control" placeholder="Что думаете об этом изображении?" name="comment" id="comment" rows="3"></textarea>
+  <textarea class="form-control mt-3 mb-2" placeholder="Что думаете об этом изображении?" name="comment" id="comment" rows="3"></textarea>
 </div>
    <!-- <textarea placeholder="Что думаете?" name="comment" id="comment"></textarea> -->
    <button type="submit" class="btn btn-outline-secondary">Опубликовать комментарий</button>
    <!-- <button type="submit">Опубликовать</button> -->
 </form>
+<hr>
+<?php
+    }
+?>
 </div> <!-- col -->
 </div> <!-- row -->
 </div> <!-- container -->

@@ -1,9 +1,11 @@
 <?php
  
 define('URL', '/'); // URL текущей страницы
-define('UPLOAD_MAX_SIZE', 30000000); // 30mb
+define('UPLOAD_MAX_SIZE', 20000000); // 20mb
 define('ALLOWED_TYPES', ['image/jpeg', 'image/png', 'image/gif']);
 define('UPLOAD_DIR', 'uploads');
+define('HOST_NAME', 'localhost');
+define('DB_NAME', "image_gallery");
  
 /*$errors = [];
  

@@ -1,9 +1,10 @@
 <?
 // Скрипт проверки 
 // Соединяемся с БД
+include 'config.php';
 session_start();
 
-$link=mysqli_connect("localhost", "root", "root", "image_gallery");
+$link=mysqli_connect(HOST_NAME, "root", "root", DB_NAME);
  
 if (isset($_COOKIE['id']) and isset($_COOKIE['hash']))
 {
