@@ -34,12 +34,13 @@ if (!empty($_FILES)) {
                     break;
             }
             
-            //$link=mysqli_connect(HOST_NAME, "root", "root", DB_NAME);
+            //даем изображению уникальное имя
             $max_image_id = mysqli_query($link,"SELECT MAX(image_id) FROM images");
             $max_image = mysqli_fetch_assoc($max_image_id);
+            
             $name_id = (int) $max_image["MAX(image_id)"] + 1;
-            $saveName = "Picture" . $name_id;
-            $savePath = UPLOAD_DIR . '/' . $saveName . $extension;
+            $saveName = "Picture" . $name_id . $extension;
+            $savePath = UPLOAD_DIR . '/' . $saveName;
            
             if (!move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $savePath)) {
             $errors[] = 'Ошибка загрузки файла ' . $fileName;         

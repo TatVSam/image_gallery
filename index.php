@@ -72,37 +72,37 @@ if (!empty($_POST["comment_deleted_id"])) {
 //Интерфейс авторизованного пользователя
 if (!empty($_SESSION['auth'])) {
 ?>
-<div class="nav"> 
+  <div class="nav"> 
         <!--При авторизации отображаем приветствие и кнопку для выхода-->
         <p class="welcome">Здравствуйте, <?=$_SESSION['user_login']?></p>
         <a href="logout.php"><button class="open-button btn btn-secondary" type="button">Выйти</button></a>         
-</div>
+  </div>
 
 
 
 
-<div class="container form-container rounded p-4 m-12 mt-2">
+  <div class="container form-container rounded p-4 m-12 mt-2">
 
 
 
-<h4>Добро пожаловать, <?= $_SESSION['user_login'] ?>! Вы можете загрузить новое изображение в нашу галерею!</h1>
+  <h4>Добро пожаловать, <?= $_SESSION['user_login'] ?>! Вы можете загрузить новое изображение в нашу галерею!</h1>
  
  
-  <form action="upload.php" method="post" enctype="multipart/form-data">
-    <p>Выберите изображение для загрузки:<p>
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+      <p>Выберите изображение для загрузки:<p>
 
-    <input type="hidden" name="MAX_FILE_SIZE" value="UPLOAD_MAX_SIZE">
-    <input type="file" class="file-input" name="fileToUpload" id="chooseFile">
-    <small class="form-text text-muted">
+      <input type="hidden" name="MAX_FILE_SIZE" value="UPLOAD_MAX_SIZE">
+      <input type="file" class="file-input" name="fileToUpload" id="chooseFile">
+      <small class="form-text text-muted">
           Максимальный размер файла: <?php echo UPLOAD_MAX_SIZE / 1000000; ?> Мб.
           Допустимые форматы: <?php echo implode(', ', ALLOWED_TYPES) ?>.
-    </small>
+      </small>
    
-<hr>
+    <hr>
   
-    <button type="submit" class="btn btn-primary">Загрузить</button>
-    <a href="index.php" class="btn btn-secondary ml-3">Сброс</a>
-  </form>
+      <button type="submit" class="btn btn-primary">Загрузить</button>
+      <a href="index.php" class="btn btn-secondary ml-3">Сброс</a>
+    </form>
 
    
 
@@ -204,10 +204,6 @@ if (!empty($_SESSION['auth'])) {
             <input name="password" class="form-control" type="password" placeholder="Введите пароль" required>
           </div>
 
-          <div class="form-group">
-            <label for="not_attach_ip"><b>Не прикреплять к IP(не безопасно)</b></label>
-            <input type="checkbox" class="form-control" name="not_attach_ip"><br>
-        </div>
       </div>
 
       <div class="modal-footer">
@@ -240,7 +236,7 @@ foreach ($images as $image) {
     ?>
     <div class="text-info mt-1">Загрузили Вы</div>
 
-    <form action="" method="post">
+    <form action="" method="post" class="mb-2">
       <input type="hidden" name="deleted_id" value="<?= $image['image_id'] ?>">
       <button class="btn btn-link" type="submit">Удалить изображение</button>
   
@@ -253,7 +249,7 @@ foreach ($images as $image) {
       $image_uploader = mysqli_fetch_assoc($result);
 
     ?>
-     <div class="text-info mt-1">Загрузил(а) <?= $image_uploader['user_login'] ?></div>
+     <div class="text-info mt-1 mb-2">Загрузил(а) <?= $image_uploader['user_login'] ?></div>
   <?php
     }
   ?>
@@ -275,6 +271,7 @@ foreach ($images as $image) {
         <p><?= $comment['text'] ?></p>
         <p class="text-right text-muted"><?= $comment['date'] ?></p>
     <?php
+    //Авторизованный пользователь может удалить свой комментарий
         if (!empty($_SESSION["user_id"]) and ($_SESSION["user_id"] == $comment["author_id"])) {
             ?>
             
@@ -286,30 +283,30 @@ foreach ($images as $image) {
                 }
         echo " </div>";
     }
- 
+    //Авторизованный пользователь может оставить комментарий
     if (!empty($_SESSION['auth'])) {
   ?>
  
     <form action="" method="post">
-    <input type="hidden" name="comment_image_id" value="<?= $image['image_id'] ?>">
+      <input type="hidden" name="comment_image_id" value="<?= $image['image_id'] ?>">
     
-    <div class="form-group purple-border">
+      <div class="form-group purple-border">
   
-  <textarea class="form-control mt-3 mb-2" placeholder="Что думаете об этом изображении?" name="comment" id="comment" rows="3"></textarea>
-</div>
+        <textarea class="form-control mt-3 mb-2" placeholder="Что думаете об этом изображении?" name="comment" id="comment" rows="3"></textarea>
+      </div>
    
-   <button type="submit" class="btn btn-outline-secondary">Опубликовать комментарий</button>
+      <button type="submit" class="btn btn-outline-secondary">Опубликовать комментарий</button>
  
-</form>
-<hr>
-<?php
-    }
-?>
+    </form>
+    <hr>
+    <?php
+      }
+    ?>
 </div> <!-- col -->
 </div> <!-- row -->
 </div> <!-- container -->
 <?php
-}
+} //конец вывода галереи
 
 ?>
 

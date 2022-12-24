@@ -7,13 +7,13 @@ img {
 
 .nav {
     background-color: #544141;
-    min-height: 60px;
+    min-height: 55px;
 }
 
 .welcome {
     position: absolute;
     top: 2%;
-    right: 120px;
+    right: 135px;
     color:#ddd;
 }
 
@@ -21,7 +21,7 @@ img {
     position: absolute;
     width: 100px;
     top: 1%;
-    right: 5px; 
+    right: 20px; 
     
 }
 
@@ -41,7 +41,7 @@ img {
 .registration-button {
     position: absolute;
     top: 1%;
-    right: 120px;     
+    right: 135px;     
     
 }
 
