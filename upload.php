@@ -1,9 +1,5 @@
 <?php
 
-
-//var_dump($_FILES['fileToUpload']);
-
-//var_dump($_FILES["error"]);
 session_start();
 include 'config.php';
 
@@ -38,7 +34,7 @@ if (!empty($_FILES)) {
                     break;
             }
             
-            $link=mysqli_connect(HOST_NAME, "root", "root", DB_NAME);
+            //$link=mysqli_connect(HOST_NAME, "root", "root", DB_NAME);
             $max_image_id = mysqli_query($link,"SELECT MAX(image_id) FROM images");
             $max_image = mysqli_fetch_assoc($max_image_id);
             $name_id = (int) $max_image["MAX(image_id)"] + 1;

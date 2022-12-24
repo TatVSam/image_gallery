@@ -12,7 +12,7 @@ function generateCode($length=6) {
     return $code;
 } 
 // Соединяемся с БД
-$link=mysqli_connect(HOST_NAME, "root", "root", DB_NAME); 
+//$link=mysqli_connect(HOST_NAME, "root", "root", DB_NAME); 
 if(isset($_POST['submit']))
 {
     // Вытаскиваем из БД запись, у которой логин равняется введенному

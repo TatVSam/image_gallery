@@ -2,7 +2,7 @@
 // Страница регистрации нового пользователя 
 // Соединяемся с БД
 include 'config.php';
-$link=mysqli_connect(HOST_NAME, "root", "root", DB_NAME); 
+
 if(isset($_POST['submit']))
 {
     $err = [];

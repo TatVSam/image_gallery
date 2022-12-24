@@ -2,7 +2,8 @@
 include 'config.php';
 include 'functions.php';
 session_start();
-$link=mysqli_connect(HOST_NAME, "root", "root", DB_NAME); 
+
+//Если заходит ранее авторизованный пользователь
 if (!empty($_COOKIE['id'])) {
     $query = mysqli_query($link,"SELECT user_id, user_hash, user_login FROM users WHERE user_id='".mysqli_real_escape_string($link,$_COOKIE['id'])."' LIMIT 1");
     $userdata = mysqli_fetch_assoc($query);
@@ -17,19 +18,22 @@ if (!empty($_COOKIE['id'])) {
 }
 
 
+//Удаление изображения тем, кто его загрузил
 
 if (!empty($_POST["deleted_id"])) {
     //удаляем файл с диска
     $delete_image = mysqli_query($link,"SELECT name FROM images WHERE image_id ='".mysqli_real_escape_string($link, $_POST["deleted_id"])."'");
     $deleted_image_path = mysqli_fetch_assoc($delete_image);
     unlink($deleted_image_path['name']);
+    //Удаляем из БД запись о изображении и комментарии к изображению
     mysqli_query($link,"DELETE FROM images WHERE image_id ='".mysqli_real_escape_string($link, $_POST["deleted_id"])."'");
     mysqli_query($link,"DELETE FROM comments WHERE image_id ='".mysqli_real_escape_string($link, $_POST["deleted_id"])."'");
     unset($_POST["deleted_id"]);
     header ("Refresh: 2");
 }
 
-echo $_POST["comment_image_id"];
+//Добавление комментария
+
 if (!empty($_POST["comment_image_id"])) {
     $comment_date = date("j F Y, G:i");
     $comment_date_rus = getRussianDate($comment_date);
@@ -38,12 +42,13 @@ if (!empty($_POST["comment_image_id"])) {
     text='".mysqli_real_escape_string($link, $_POST["comment"])."', 
     date='$comment_date_rus'"); 
     unset($_POST["comment_image_id"]);
-    //echo $_POST["comment_image_id"];
+ 
     header ("Refresh: 2");
 }
-echo $_POST["comment_deleted_id"];
+
+//Удаление комментария автором
 if (!empty($_POST["comment_deleted_id"])) {
-    //echo $_POST["comment_deleted_id"];
+    
     mysqli_query($link,"DELETE FROM comments WHERE comment_id ='".mysqli_real_escape_string($link, $_POST["comment_deleted_id"])."'");
     unset($_POST["comment_deleted_id"]);
     header ("Refresh: 2");
@@ -64,6 +69,7 @@ if (!empty($_POST["comment_deleted_id"])) {
 <body>
 
 <?php
+//Интерфейс авторизованного пользователя
 if (!empty($_SESSION['auth'])) {
 ?>
 <div class="nav"> 
@@ -93,7 +99,7 @@ if (!empty($_SESSION['auth'])) {
     </small>
    
 <hr>
-    <!--<input type="submit" value="Загрузить изображение" name="submit">-->
+  
     <button type="submit" class="btn btn-primary">Загрузить</button>
     <a href="index.php" class="btn btn-secondary ml-3">Сброс</a>
   </form>
@@ -101,25 +107,27 @@ if (!empty($_SESSION['auth'])) {
    
 
   <?php
-  }
-
+ // }
+  //Информация об ошибках загрузки
   if (!empty ($_SESSION["upload_info"])) { ?>
     <div class="alert alert-danger"><?= $_SESSION["upload_info"]; ?></div>
     
    <?php unset ($_SESSION["upload_info"]);
   
   }
-
+  // Информация об успешной загрузке изображения
   if (!empty ($_SESSION["upload_info_success"])) { ?>
     <div class="alert alert-success"><?= $_SESSION["upload_info_success"]; ?></div>
     
    <?php unset ($_SESSION["upload_info_success"]);
   
   }
+}
 ?>
 </div>
 
 <?php
+//Интерфейс неавторизованного пользователя
         if (empty($_SESSION['auth'])) {
     ?>
       
@@ -135,12 +143,8 @@ if (!empty($_SESSION['auth'])) {
         }
     ?>
 
-<!-- Button trigger modal 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Запустить модальное окно
-</button>-->
 
-<!-- Modal -->
+<!-- Модальное окно регистрации -->
 <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -175,12 +179,9 @@ if (!empty($_SESSION['auth'])) {
   </div>
 </div>
 
-<!-- Button trigger modal 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-  Запустить модальное окно
-</button>-->
 
-<!-- Modal -->
+
+<!-- Модальное окно авторизации -->
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -220,50 +221,51 @@ if (!empty($_SESSION['auth'])) {
 </div>
 
 <?php
-//$link=mysqli_connect("localhost", "root", "root", "image_gallery"); 
+
+//Вывод галереи
 $result = mysqli_query($link,"SELECT image_id, uploader_id, name FROM images");
 for ($images = []; $row = mysqli_fetch_assoc($result); $images[] = $row);
-//echo "<pre>"; var_dump($images); echo "</pre>";
-//mysqli_query($link,"DELETE FROM images WHERE image_id = 5");
-//$result = mysqli_query($link,"SELECT user_login FROM users WHERE user_id = 2 LIMIT 1");
-//$res = mysqli_fetch_assoc($result);
-//echo $res['user_login'];
 
 foreach ($images as $image) {
 ?>
 <div class="container">
     <div class="row">
+    <!--Колонка изображений -->
     <div class="col-sm mt-4">
     <img src="<?= $image["name"] ?>" >
-   
-    <?php 
-    
-    $result = mysqli_query($link,"SELECT user_login FROM users WHERE user_id ='".mysqli_real_escape_string($link, $image['uploader_id'])."'");
-    
-    $image_uploader = mysqli_fetch_assoc($result);
-    ?>
-    <div class="text-info mt-1">Загрузил(а) <?= $image_uploader['user_login'] ?></div>
+ 
     <?php
+    //Если авторизован пользователь, загрузивший изображение
     if (!empty($_SESSION["user_id"]) and ($_SESSION["user_id"] == $image["uploader_id"])) {
-?>
+    ?>
+    <div class="text-info mt-1">Загрузили Вы</div>
 
-   <form action="" method="post">
-   <input type="hidden" name="deleted_id" value="<?= $image['image_id'] ?>">
-   <button class="btn btn-link" type="submit">Удалить изображение</button>
-   <!--<p><input type="submit" value="Удалить"></p> -->
-  </form>
-   
+    <form action="" method="post">
+      <input type="hidden" name="deleted_id" value="<?= $image['image_id'] ?>">
+      <button class="btn btn-link" type="submit">Удалить изображение</button>
+  
+    </form>   
     
   <?php
-    } ?>
-  
+    } else {
+      $result = mysqli_query($link,"SELECT user_login FROM users WHERE user_id ='".mysqli_real_escape_string($link, $image['uploader_id'])."'");
+    
+      $image_uploader = mysqli_fetch_assoc($result);
+
+    ?>
+     <div class="text-info mt-1">Загрузил(а) <?= $image_uploader['user_login'] ?></div>
+  <?php
+    }
+  ?>
+
     </div>
+    <!--Колонка комментариев -->
     <div class="col-sm mt-4">
     <p class="text-center text-uppercase font-weight-bold text-secondary">Комментарии</p>
     <?php
     $result = mysqli_query($link,"SELECT comment_id, author_id, text, date FROM comments WHERE image_id='".mysqli_real_escape_string($link, $image['image_id'])."'");
     for ($comments = []; $row = mysqli_fetch_assoc($result); $comments[] = $row);
-    //echo "<pre>"; var_dump($comments); echo "</pre>";
+   
     foreach ($comments as $comment) {
         $author_name_query = mysqli_query($link,"SELECT user_login FROM users WHERE user_id='".mysqli_real_escape_string($link, $comment['author_id'])."' LIMIT 1");
         $author_name = mysqli_fetch_assoc($author_name_query);
@@ -272,22 +274,21 @@ foreach ($images as $image) {
         <p class="text-right text-info"><?= $author_name['user_login'] ?></p>
         <p><?= $comment['text'] ?></p>
         <p class="text-right text-muted"><?= $comment['date'] ?></p>
-<?php
+    <?php
         if (!empty($_SESSION["user_id"]) and ($_SESSION["user_id"] == $comment["author_id"])) {
             ?>
             
                <form action="" method="post">
-               <input type="hidden" name="comment_deleted_id" value="<?= $comment['comment_id'] ?>">
-               <button class="btn btn-link" type="submit">Удалить комментарий</button>
-               <!-- <p><input type="submit" value="Удалить"></p> -->
-              </form>
+                  <input type="hidden" name="comment_deleted_id" value="<?= $comment['comment_id'] ?>">
+                  <button class="btn btn-link" type="submit">Удалить комментарий</button>
+               </form>
               <?php
                 }
         echo " </div>";
     }
  
     if (!empty($_SESSION['auth'])) {
- ?>
+  ?>
  
     <form action="" method="post">
     <input type="hidden" name="comment_image_id" value="<?= $image['image_id'] ?>">
@@ -296,9 +297,9 @@ foreach ($images as $image) {
   
   <textarea class="form-control mt-3 mb-2" placeholder="Что думаете об этом изображении?" name="comment" id="comment" rows="3"></textarea>
 </div>
-   <!-- <textarea placeholder="Что думаете?" name="comment" id="comment"></textarea> -->
+   
    <button type="submit" class="btn btn-outline-secondary">Опубликовать комментарий</button>
-   <!-- <button type="submit">Опубликовать</button> -->
+ 
 </form>
 <hr>
 <?php
@@ -314,8 +315,8 @@ foreach ($images as $image) {
 
     
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
    
 
