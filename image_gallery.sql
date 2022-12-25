@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 23 2022 г., 14:46
+-- Время создания: Дек 25 2022 г., 18:48
 -- Версия сервера: 8.0.29
 -- Версия PHP: 7.1.33
 
@@ -40,16 +40,24 @@ CREATE TABLE `comments` (
 --
 
 INSERT INTO `comments` (`comment_id`, `author_id`, `image_id`, `text`, `date`) VALUES
-(1, 1, 2, 'text', '21st feb'),
-(2, 2, 1, 'первый коммент', 'December 16, 2022, 1:46 pm'),
-(13, 7, 7, 'Когда в дом входит год молодой,\r\nА старый уходит вдаль,\r\nСнежинку хрупкую спрячь в ладонь,\r\nЖелание загадай.\r\nСмотри с надеждой в ночную синь,\r\nНе крепко ладонь сжимай,\r\nИ всё, о чём мечталось, проси,\r\nЗагадывай и желай.\r\n\r\nИ Новый Год, что вот-вот настанет,\r\nИсполнит вмиг мечту твою,\r\nЕсли снежинка не растает,\r\nВ твоей ладони не растает,\r\nПока часы двенадцать бьют,\r\nПока часы двенадцать бьют.', 'December 19, 2022, 8:57 pm'),
-(14, 8, 1, 'Отличная схема!', 'December 19, 2022, 10:11 pm'),
-(22, 8, 15, 'Как весело!', 'December 20, 2022, 9:26 pm'),
-(23, 11, 1, 'Да, мне тоже нравится.', '22 December, 2022, 21:13 pm'),
-(24, 11, 1, 'Тест новой даты', '22 декабря 2022 г.,  21:55'),
-(26, 2, 21, 'Почему же это изображение без комментариев?', '22 декабря 2022 г.,  22:23'),
-(27, 5, 21, 'Надо исправить)', '23 декабря 2022 г.,  13:16'),
-(28, 5, 27, 'Очень красиво! Где снято?', '23 декабря 2022 г.,  13:58');
+(31, 14, 31, 'Это мы с дочками на юге отдыхали :)', '25 декабря 2022 г.,  17:40'),
+(32, 15, 30, 'Это Блю марбл?', '25 декабря 2022 г.,  17:54'),
+(33, 15, 31, 'Как здорово! Тоже хочу в отпуск :(', '25 декабря 2022 г.,  17:55'),
+(34, 14, 33, 'Такие фотографии всегда нагоняют на меня тоску. Это не Россия?', '25 декабря 2022 г.,  17:58'),
+(35, 14, 34, 'Это знает всякий. Это не слова. Преданней собаки нету существа!', '25 декабря 2022 г.,  18:00'),
+(36, 15, 34, 'Преданней собаки, ласковей собаки...', '25 декабря 2022 г.,  18:02'),
+(37, 15, 33, 'Нет, это США. Обожаю заброшки.', '25 декабря 2022 г.,  18:03'),
+(38, 13, 30, 'Нет, это фото 2006 года.', '25 декабря 2022 г.,  18:06'),
+(39, 13, 34, 'Веселей собаки - нету существа!', '25 декабря 2022 г.,  18:06'),
+(40, 15, 35, 'Галактика Боде. Идеальная спираль. И ни человека на световые годы вокруг...', '25 декабря 2022 г.,  18:15'),
+(41, 14, 36, 'Какая красота!', '25 декабря 2022 г.,  18:17'),
+(42, 14, 37, 'Счастливые дети прекрасны вдвойне!', '25 декабря 2022 г.,  18:21'),
+(43, 15, 38, 'У меня в детстве тоже был ретривер...', '25 декабря 2022 г.,  18:23'),
+(44, 15, 40, 'Кинмел Холл... Как же я хочу тут побывать.', '25 декабря 2022 г.,  18:28'),
+(45, 13, 41, 'Интересное фото! Это Индия?', '25 декабря 2022 г.,  18:31'),
+(46, 15, 43, 'The universe is infinite and chaotic and cold. And there has never been a plan...', '25 декабря 2022 г.,  18:34'),
+(47, 15, 41, 'Да, это в городе Шекгавати (штат Раджастан).', '25 декабря 2022 г.,  18:36'),
+(48, 13, 44, 'Австралийская овчарка! Эта порода отлично дрессируется.', '25 декабря 2022 г.,  18:44');
 
 -- --------------------------------------------------------
 
@@ -68,18 +76,21 @@ CREATE TABLE `images` (
 --
 
 INSERT INTO `images` (`image_id`, `uploader_id`, `name`) VALUES
-(1, 1, 'uploads/R958Q - 2.jpg'),
-(7, 2, 'uploads/1618453632_36-phonoteka_org-p-fon-dlya-otkritki-s-novim-godom-52.jpg'),
-(11, 6, 'uploads/R958H - 1.jpg'),
-(14, 7, 'uploads/Planet9_3840x2160.jpg'),
-(15, 5, 'uploads/1.jpg'),
-(16, 8, 'uploads/children_jpeg.jpg'),
-(17, 8, 'uploads/3.jpg'),
-(18, 8, 'uploads/1.png'),
-(20, 3, 'uploads/S107T.jpg'),
-(21, 3, 'uploads/IMG-20220516-WA0002.jpg'),
-(23, 5, 'uploads/Picture23'),
-(27, 5, 'uploads/Picture27.jpg');
+(30, 13, 'uploads/Picture1.jpg'),
+(31, 14, 'uploads/Picture31.jpg'),
+(33, 15, 'uploads/Picture32.jpg'),
+(34, 14, 'uploads/Picture34.jpg'),
+(35, 13, 'uploads/Picture35.jpg'),
+(36, 13, 'uploads/Picture36.jpg'),
+(37, 14, 'uploads/Picture37.jpg'),
+(38, 14, 'uploads/Picture38.jpg'),
+(39, 15, 'uploads/Picture39.jpg'),
+(40, 15, 'uploads/Picture40.jpg'),
+(41, 15, 'uploads/Picture41.jpg'),
+(42, 13, 'uploads/Picture42.jpg'),
+(43, 13, 'uploads/Picture43.png'),
+(44, 14, 'uploads/Picture44.jpg'),
+(45, 15, 'uploads/Picture45.jpg');
 
 -- --------------------------------------------------------
 
@@ -91,26 +102,17 @@ CREATE TABLE `users` (
   `user_id` int UNSIGNED NOT NULL,
   `user_login` varchar(30) CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL,
   `user_password` varchar(32) CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL,
-  `user_hash` varchar(32) CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL DEFAULT '',
-  `user_ip` int UNSIGNED NOT NULL DEFAULT '0'
+  `user_hash` varchar(32) CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Дамп данных таблицы `users`
 --
 
-INSERT INTO `users` (`user_id`, `user_login`, `user_password`, `user_hash`, `user_ip`) VALUES
-(1, 'Resa', 'c4e14d38d939ebf3f227fa46492dd992', 'cb20834f09a98e0a0a2c8c3f536a296a', 0),
-(2, 'Natalia', '485c50b5055548508398db885bae15f7', '3d7af4bc2f611592f2434771ff161c11', 0),
-(3, 'Anthony', '65ee77ba45cd8d4e12e6e50313968df5', '51743564de16160c8642c4da4a9a5d1c', 2130706433),
-(4, 'Nicholas', 'db00feea3951d3a08e78f3b24b21ded3', 'bd6573e00ef264ca6f5e287222d81cce', 0),
-(5, 'Tanya', 'ba6b8128b99108c870ac83d8a4876aac', '14fd3c6a3f39049a32fe32ff32cc37cc', 0),
-(6, 'Alex', '796c0079eab8b19f02d8a71ea4311a50', '306f6347adc347d6ed6c9427eea6adbe', 0),
-(7, 'Mary', 'f8a69dfbe86f5cbc8aca3efd9806ffd2', '2a8831dd17e6f04b01de9907daeb6ea2', 0),
-(8, 'Annie', 'ac2297e7827fefbed6658b000f387e28', 'bc4d11aa1b9b33690d64a07bf0be2d02', 0),
-(9, 'Jonathan', '213e7f2bab84b84b899be2b0bf8d17aa', '052b735c24b28998e844426306c466ad', 0),
-(10, 'Alexandra', 'f55067b736c347c9b7555b376a6d1053', 'ff5271e276250b73954c555ab8012975', 0),
-(11, 'Robin', '595e733954cded61f0e28deb0967a44e', '9b52ab646a89f93cfe6ed762fd19bd3b', 0);
+INSERT INTO `users` (`user_id`, `user_login`, `user_password`, `user_hash`) VALUES
+(13, 'Joseph', 'a0f88708159e790880dd246fa608ae37', 'b48f79957b05963bc8cdd06da0cf8cf0'),
+(14, 'Nataly', '5a14752682b50f929ac52bfcc69a49c5', 'd91d9ee4ec6aa3b4f2945b3820fea3be'),
+(15, 'Bella', '3ff50cadf7969ff8017d9ddca227e2a2', '079188a5ede7628baa611cc2fc2a929b');
 
 --
 -- Индексы сохранённых таблиц
@@ -143,19 +145,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `comment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT для таблицы `images`
 --
 ALTER TABLE `images`
-  MODIFY `image_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `image_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `user_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц

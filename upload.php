@@ -38,7 +38,8 @@ if (!empty($_FILES)) {
             $max_image_id = mysqli_query($link,"SELECT MAX(image_id) FROM images");
             $max_image = mysqli_fetch_assoc($max_image_id);
             
-            $name_id = (int) $max_image["MAX(image_id)"] + 1;
+            $name_id = (int) $max_image["MAX(image_id)"] ?? 0;
+            $name_id++;
             $saveName = "Picture" . $name_id . $extension;
             $savePath = UPLOAD_DIR . '/' . $saveName;
            

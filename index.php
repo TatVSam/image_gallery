@@ -266,7 +266,7 @@ foreach ($images as $image) {
         $author_name_query = mysqli_query($link,"SELECT user_login FROM users WHERE user_id='".mysqli_real_escape_string($link, $comment['author_id'])."' LIMIT 1");
         $author_name = mysqli_fetch_assoc($author_name_query);
     ?>
-        <div class="container comment_container mt-2">
+        <div class="container comment_container mt-2 mb-1">
         <p class="text-right text-info"><?= $author_name['user_login'] ?></p>
         <p><?= $comment['text'] ?></p>
         <p class="text-right text-muted"><?= $comment['date'] ?></p>
